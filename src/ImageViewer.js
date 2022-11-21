@@ -1,4 +1,4 @@
-export default function ImageViewer({ $target }) {
+export default function ImageViewer({ $target, onClose }) {
   const $imageViewer = document.createElement("div");
   $imageViewer.className = "ImageViewer Modal";
   $target.appendChild($imageViewer);
@@ -23,4 +23,17 @@ export default function ImageViewer({ $target }) {
   };
 
   this.render();
+
+  window.addEventListener("keyup", (e) => {
+    // 만약 누른 키가 esc인 경우 onClose 호출
+    if (e.key === "Escape") {
+      onClose();
+    }
+  });
+
+  $imageViewer.addEventListener("click", (e) => {
+    if (Array.from(e.target.classList).includes("Modal")) {
+      onClose();
+    }
+  });
 }
