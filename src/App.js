@@ -1,4 +1,5 @@
 import { request } from "./api.js";
+import Breadcrumb from "./Breadcrumb.js";
 import ImageViewer from "./ImageViewer.js";
 import Loading from "./Loading.js";
 import Nodes from "./Nodes.js";
@@ -13,6 +14,11 @@ export default function App({ $target }) {
 
   const loading = new Loading({
     $target,
+  });
+
+  const breadcrumb = new Breadcrumb({
+    $target,
+    initialState: this.state.paths,
   });
 
   const nodes = new Nodes({
@@ -77,6 +83,8 @@ export default function App({ $target }) {
     });
 
     loading.setState(this.state.isLoading);
+
+    breadcrumb.setState(this.state.paths);
   };
 
   const fetchNodes = async (id) => {
