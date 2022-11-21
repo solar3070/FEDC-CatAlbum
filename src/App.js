@@ -1,4 +1,5 @@
 import { request } from "./api.js";
+import ImageViewer from "./ImageViewer.js";
 import Nodes from "./Nodes.js";
 
 export default function App({ $target }) {
@@ -12,12 +13,24 @@ export default function App({ $target }) {
     initialState: {
       isRoot: this.state.isRoot,
       nodes: this.state.nodes,
+      selectedImageUrl: null,
     },
     onClick: async (node) => {
       if (node.type === "DIRECTORY") {
         await fetchNodes(node.id);
       }
+
+      if (node.type === "FILE") {
+        this.setState({
+          ...this.state,
+          selectedImageUrl: `https://kdt-frontend.cat-api.programmers.co.kr/static${node.filePath}`,
+        });
+      }
     },
+  });
+
+  const imageViewer = new ImageViewer({
+    $target,
   });
 
   this.setState = (nextState) => {
@@ -26,6 +39,10 @@ export default function App({ $target }) {
     nodes.setState({
       isRoot: this.state.isRoot,
       nodes: this.state.nodes,
+    });
+
+    imageViewer.setState({
+      selectedImageUrl: this.state.selectedImageUrl,
     });
   };
 
