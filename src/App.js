@@ -1,13 +1,19 @@
 import { request } from "./api.js";
 import ImageViewer from "./ImageViewer.js";
+import Loading from "./Loading.js";
 import Nodes from "./Nodes.js";
 
 export default function App({ $target }) {
   this.state = {
     isRoot: true,
+    isLoading: false,
     nodes: [],
     paths: [],
   };
+
+  const loading = new Loading({
+    $target,
+  });
 
   const nodes = new Nodes({
     $target,
@@ -69,15 +75,22 @@ export default function App({ $target }) {
     imageViewer.setState({
       selectedImageUrl: this.state.selectedImageUrl,
     });
+
+    loading.setState(this.state.isLoading);
   };
 
   const fetchNodes = async (id) => {
+    this.setState({
+      ...this.state,
+      isLoading: true,
+    });
     const nodes = await request(id ? `/${id}` : "/");
 
     this.setState({
       ...this.state,
       nodes,
       isRoot: id ? false : true,
+      isLoading: false,
     });
   };
 
